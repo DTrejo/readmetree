@@ -16,7 +16,7 @@ root = root.replace('~', process.env.HOME)
 root = path.resolve(process.cwd(), root)
 
 var content = { '/' : style
-    + '<br><h1><a href="http://github.com/dtrejo/readmetree">readmetree</a><h2>'
+    + '<br><h1><a href="http://github.com/dtrejo/readmetree">readmetree</a><h3>'
 }
 http.createServer(function(req, res) {
     if (!content.hasOwnProperty(req.url)) {
@@ -30,8 +30,9 @@ readdirRecur(root, isNodeModules)
     .filter(isReadme)
     .sort()
     .forEach(function(readme) {
-        console.log(readme)
+        // console.log(readme)
         var shortpath = readme.replace(path.dirname(path.dirname(readme)), '')
+        if (content[shortpath]) return
         content[shortpath] =
             style + nav + marked(fs.readFileSync(readme, 'utf8'))
         content['/'] +=
