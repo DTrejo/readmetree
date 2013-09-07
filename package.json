@@ -1,0 +1,29 @@
+{
+  "name": "readmetree",
+  "version": "0.0.0",
+  "description": "see every readme in your project",
+  "main": "readmetree.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dtrejo/readmetree"
+  },
+  "keywords": [
+    "readme",
+    "node_modules",
+    "see",
+    "all"
+  ],
+  "author": "David Trejo",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/dtrejo/readmetree/issues"
+  },
+  "preferGlobal": true,
+  "bin": "./bin/readmetree",
+  "dependencies": {
+    "underscore": "~1.5.1"
+  }
+}
