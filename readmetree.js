@@ -28,7 +28,12 @@ http.createServer(function(req, res) {
 
 readdirRecur(root, isNodeModules)
     .filter(isReadme)
-    .sort()
+    .sort(function(a, b) {
+        var aa = path.basename(path.dirname(a)).toLowerCase()
+        var bb = path.basename(path.dirname(b)).toLowerCase()
+        console.log(aa, bb)
+        return aa.localeCompare(bb)
+    })
     .forEach(function(readme) {
         // console.log(readme)
         var shortpath = readme.replace(path.dirname(path.dirname(readme)), '')
