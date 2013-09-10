@@ -7,6 +7,8 @@ Great for offline coding.
 
 ## `npm -g install readmetree`
 
+<img src="https://dl.dropboxusercontent.com/u/10047/tree-small.jpg">
+
 Enjoy!
 
 PRs welcome!

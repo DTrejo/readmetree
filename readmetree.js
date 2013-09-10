@@ -6,8 +6,8 @@ var exec = require('child_process').exec
 var _ = require('underscore')
 var marked = require('marked')
 
-var style = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8')
-var nav = fs.readFileSync(path.join(__dirname, 'nav.html'), 'utf8')
+var style = fs.readFileSync(path.join(__dirname, 'assets', 'style.css'), 'utf8')
+var nav = fs.readFileSync(path.join(__dirname, 'assets', 'nav.html'), 'utf8')
 var PORT = 9999
 var root = process.argv[2]
 
