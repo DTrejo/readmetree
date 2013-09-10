@@ -1,7 +1,7 @@
 {
   "name": "readmetree",
   "version": "0.1.3",
-  "description": "see every readme in your project",
+  "description": "see every readme in your project. great for offline coding.",
   "main": "readmetree.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,8 @@
     "readme",
     "node_modules",
     "see",
-    "all"
+    "all",
+    "offline"
   ],
   "author": "David Trejo",
   "license": "BSD-2-Clause",
@@ -24,6 +25,7 @@
   "preferGlobal": true,
   "bin": "./bin/readmetree",
   "dependencies": {
-    "underscore": "~1.5.1"
+    "underscore": "~1.5.1",
+    "marked": "~0.2.9"
   }
 }
