@@ -5,6 +5,7 @@ var exec = require('child_process').exec
 
 var _ = require('underscore')
 var marked = require('marked')
+var special = require('special-html')
 
 var style = fs.readFileSync(path.join(__dirname, 'assets', 'style.css'), 'utf8')
 var nav = fs.readFileSync(path.join(__dirname, 'assets', 'nav.html'), 'utf8')
@@ -39,7 +40,7 @@ readdirRecur(root, isNodeModules)
         var shortpath = readme.replace(path.dirname(path.dirname(readme)), '')
         if (content[shortpath]) return
         content[shortpath] =
-            style + nav + marked(fs.readFileSync(readme, 'utf8'))
+            style + nav + special(marked(fs.readFileSync(readme, 'utf8')))
         content['/'] +=
             '<br><a href="http://localhost:'+PORT+shortpath+'">'
             + 'http://localhost:'+PORT+'<b>'+shortpath+'</b></a>'
