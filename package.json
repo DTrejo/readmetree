@@ -27,7 +27,8 @@
   "dependencies": {
     "underscore": "~1.5.1",
     "marked": "~0.3.2",
-    "special-html": "0.0.1"
+    "special-html": "0.0.1",
+    "glob": "~3.2.9"
   },
   "devDependencies": {
     "d3": "~3.3.3"
