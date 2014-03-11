@@ -16,12 +16,13 @@ var root = process.argv[2]
 if (!root) root = process.cwd()
 root = path.resolve(process.cwd(), root)
 
-var content = { '/' : style
+var content = {
+  '/': style
     + '<br><h1><a href="http://github.com/dtrejo/readmetree">readmetree</a><h3>'
 }
 http.createServer(function(req, res) {
     if (!content.hasOwnProperty(req.url)) {
-        return res.end('<h1>404z dude.</h1>'+content['/'])
+      return res.end('<h1>404z dude.</h1>' + content['/'])
     }
     res.setHeader('content-type', 'text/html')
     return res.end(content[req.url])

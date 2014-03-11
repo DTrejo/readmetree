@@ -1,6 +1,6 @@
 {
   "name": "readmetree",
-  "version": "0.1.6",
+  "version": "0.2.1",
   "description": "see every readme in your project. great for offline coding.",
   "main": "readmetree.js",
   "scripts": {
