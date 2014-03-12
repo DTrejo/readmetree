@@ -23,9 +23,8 @@
     "url": "https://github.com/dtrejo/readmetree/issues"
   },
   "preferGlobal": true,
-  "bin": "./bin/readmetree",
+  "bin": "./bin/readmetree.js",
   "dependencies": {
-    "underscore": "~1.5.1",
     "special-html": "0.0.1",
     "glob": "3.2.9",
     "highlight.js": "8.0.0",
