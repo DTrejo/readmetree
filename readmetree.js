@@ -1,9 +1,6 @@
 var fs = require('fs')
 var path = require('path')
-var http = require('http')
-var exec = require('child_process').exec
 
-var _ = require('underscore')
 var marked = require('marked')
 var highlight = require('highlight.js')
 var special = require('special-html')
@@ -11,78 +8,91 @@ var glob = require('glob')
 
 var style = fs.readFileSync(path.join(__dirname, 'assets', 'style.css'), 'utf8')
 var nav = fs.readFileSync(path.join(__dirname, 'assets', 'nav.html'), 'utf8')
-var PORT = 9999
-var root = process.argv[2]
 
-if (!root) root = process.cwd()
-root = path.resolve(process.cwd(), root)
+module.exports = ReadmeTree
 
-var content = {
-  '/': style
-    + '<br><h1><a href="http://github.com/dtrejo/readmetree">readmetree</a><h3>'
+function ReadmeTree(root) {
+  this.root = root || process.cwd()
+  this.root = path.resolve(process.cwd(), this.root)
+  this.content = {
+    '/': style
+      + '<br><h1><a href="https://github.com/dtrejo/readmetree">readmetree</a><h1>'
+  }
+
+  marked.setOptions({
+    highlight: function (code) {
+      return highlight.highlightAuto(code).value
+    }
+  })
+
+  return this
 }
 
-marked.setOptions({
-  highlight: function (code) {
-    return highlight.highlightAuto(code).value
-  }
-})
+ReadmeTree.prototype.setup = function ReadmeTree$setup(callback) {
+  var self = this
 
-http.createServer(function(req, res) {
-  if (!content.hasOwnProperty(req.url)) {
-    return res.end('<h1>404z dude.</h1>' + content['/'])
-  }
-  res.setHeader('content-type', 'text/html')
-  return res.end(content[req.url])
-}).listen(PORT)
+  glob('**/readme.m*', { cwd: self.root, nocase: true }, renderFiles)
 
-glob('**/readme.m*', { cwd: root, nocase: true }, renderFiles)
-
-function renderFiles(err, files) {
-  if (err) {
-    console.error(err)
-    return process.exit(1)
-  }
-
-  var fileCount = files.length
-
-  files = files.sort(function(a, b) {
-    var aa = path.basename(path.dirname(a)).toLowerCase()
-    var bb = path.basename(path.dirname(b)).toLowerCase()
-    return aa.localeCompare(bb)
-  })
-  .forEach(function(readme) {
-    var shortpath = path.sep + readme.split(path.sep).slice(-2).join(path.sep)
-    var moduleName = shortpath.split(path.sep)[1]
-    if (shortpath.lastIndexOf(path.sep) === 0) {
-      moduleName = path.basename(root)
+  function renderFiles(err, files) {
+    if (err) {
+      console.error(err)
+      return process.exit(1)
     }
 
-    if (content[shortpath]) return --fileCount
+    var fileCount = files.length
 
-    content['/'] +=
-      '<br><a href="http://localhost:'+PORT+shortpath+'">'
-      + moduleName + '</a>'
-    content[shortpath] = style + nav 
+    files = files.sort(function(a, b) {
+      var aa = path.basename(path.dirname(a)).toLowerCase()
+      var bb = path.basename(path.dirname(b)).toLowerCase()
+      return aa.localeCompare(bb)
+    })
+    .forEach(function(readme) {
+      var shortpath = path.sep + readme.split(path.sep).slice(-2).join(path.sep)
+      var moduleName = shortpath.split(path.sep)[1]
+      if (shortpath.lastIndexOf(path.sep) === 0) {
+        moduleName = path.basename(self.root)
+      }
 
-    loadReadme(path.resolve(root, readme), shortpath, moduleName)
-  })
+      if (self.content[shortpath]) return --fileCount
 
-  function loadReadme(readme, shortpath, name) {
-    fs.readFile(readme, 'utf8', render)
+      self.content['/'] +=
+        '<br><a href="'+shortpath+'">'
+        + moduleName + '</a>'
+      self.content[shortpath] = style + nav 
 
-    function render(err, contents) {
-      marked(contents, addReadme)
-    }
+      loadReadme(path.resolve(self.root, readme), shortpath, moduleName)
+    })
 
-    function addReadme(err, html) {
-      content[shortpath] += html
+    function loadReadme(readme, shortpath, name) {
+      fs.readFile(readme, 'utf8', render)
 
-      if (--fileCount === 0) {
-        var url = 'http://localhost:'+PORT
-        console.log(url+' is serving all your readmes')
-        exec('open '+url)
+      function render(err, contents) {
+        if (err) {
+          return callback(err)
+        }
+        marked(contents, addReadme)
+      }
+
+      function addReadme(err, html) {
+        if (err) {
+          return callback(err)
+        }
+        self.content[shortpath] += special(html)
+
+        if (--fileCount === 0) {
+          callback(null, Object.keys(self.content).length)
+        }
       }
     }
   }
+}
+
+ReadmeTree.prototype.serveRequest = ReadmeTree$serveRequest
+
+function ReadmeTree$serveRequest(req, res) {
+  if (!this.content.hasOwnProperty(req.url)) {
+    return res.end('<h1>404z dude.</h1>' + this.content['/'])
+  }
+  res.setHeader('content-type', 'text/html')
+  return res.end(this.content[req.url])
 }
